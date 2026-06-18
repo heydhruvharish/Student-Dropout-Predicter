@@ -5,7 +5,7 @@ An end-to-end Machine Learning project that predicts whether a student is at ris
 ## 🔗 Quick Links
 
 🚀 **Live Demo**
-https://YOUR_RENDER_LINK.onrender.com
+https://student-dropout-predictor-iwxs.onrender.com
 
 📊 **Project Report**
 https://heydhruvharish.github.io/Student-Dropout-Predictor/project_report.html
@@ -31,7 +31,6 @@ The project report provides an overview of the work carried out in the Jupyter n
 * Feature Engineering
 * Encoding and Feature Scaling
 * Model Selection and Training
-* Hyperparameter Tuning
 * Model Evaluation and Performance Metrics
 * Key Findings and Conclusions
 
@@ -42,7 +41,6 @@ The project report provides an overview of the work carried out in the Jupyter n
 * Interactive Web Application
 * Data Preprocessing Pipeline
 * Logistic Regression Model
-* Hyperparameter Tuning
 * Real-Time Predictions
 * Comprehensive Project Report
 * Jupyter Notebook for Reproducibility
