@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Dropout Predictor</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #f7f6f3;
+    --surface:   #ffffff;
+    --border:    #e2e0d8;
+    --text:      #1a1917;
+    --muted:     #7a7873;
+    --accent:    #2563eb;
+    --accent-lt: #eff6ff;
+    --danger:    #dc2626;
+    --danger-lt: #fef2f2;
+    --success:   #16a34a;
+    --success-lt:#f0fdf4;
+    --radius:    10px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .page { max-width: 780px; margin: 0 auto; }
+
+  /* ── Header ── */
+  header { margin-bottom: 2.5rem; }
+  .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 8px;
+  }
+  header h1 { font-size: 28px; font-weight: 700; line-height: 1.2; }
+  header p  { font-size: 14px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-title {
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  @media (max-width: 560px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ── Fields ── */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  label  { font-size: 13px; font-weight: 500; color: var(--text); }
+  .hint  { font-size: 11px; color: var(--muted); }
+
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 9px 11px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+  input[type="number"]:focus,
+  select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-lt); }
+
+  /* ── Toggle chips for Yes/No ── */
+  .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip-group input[type="radio"] { display: none; }
+  .chip-group label {
+    padding: 6px 18px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted);
+    background: var(--surface);
+  }
+  .chip-group input[type="radio"]:checked + label {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ── Submit ── */
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 15px; font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    margin-top: 0.5rem;
+  }
+  .submit-btn:hover   { opacity: 0.9; }
+  .submit-btn:active  { transform: scale(0.99); }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* ── Result ── */
+  #result { display: none; }
+  .result-card {
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.25rem;
+    border: 1px solid;
+  }
+  .result-card.risk    { background: var(--danger-lt);  border-color: #fca5a5; }
+  .result-card.safe    { background: var(--success-lt); border-color: #86efac; }
+  .result-label {
+    font-size: 18px; font-weight: 700; margin-bottom: 4px;
+  }
+  .result-card.risk  .result-label { color: var(--danger); }
+  .result-card.safe  .result-label { color: var(--success); }
+  .result-prob { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
+
+  /* Probability bar */
+  .prob-bar-wrap {
+    background: #e5e7eb;
+    border-radius: 20px; height: 8px; overflow: hidden;
+  }
+  .prob-bar-fill {
+    height: 100%; border-radius: 20px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  .result-card.risk  .prob-bar-fill { background: var(--danger); }
+  .result-card.safe  .prob-bar-fill { background: var(--success); }
+  .prob-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted); margin-top: 4px;
+  }
+
+  .result-note {
+    margin-top: 1rem; font-size: 12px; color: var(--muted);
+    border-top: 1px solid var(--border); padding-top: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* ── Error ── */
+  .error-msg {
+    background: var(--danger-lt); border: 1px solid #fca5a5;
+    border-radius: var(--radius); padding: 12px 16px;
+    font-size: 13px; color: var(--danger); margin-top: 1rem;
+    display: none;
+  }
+
+  /* ── Footer ── */
+  footer { text-align: center; font-size: 12px; color: var(--muted); margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">ML Prediction Tool</div>
+    <h1>Student Dropout Predictor</h1>
+    <p>Fill in the student's details below. The model will estimate the likelihood of dropout
+       using a Logistic Regression classifier trained on 10,000 students.</p>
+  </header>
+
+  <form id="predictForm">
+
+    <!-- Academic -->
+    <div class="card">
+      <div class="card-title">Academic profile</div>
+      <div class="grid-3">
+        <div class="field">
+          <label for="cgpa">CGPA</label>
+          <span class="hint">Cumulative GPA (0 – 4)</span>
+          <input type="number" id="cgpa" name="cgpa" step="0.01" min="0" max="4" placeholder="e.g. 2.8" required />
+        </div>
+        <div class="field">
+          <label for="attendance_rate">Attendance rate (%)</label>
+          <span class="hint">0 – 100</span>
+          <input type="number" id="attendance_rate" name="attendance_rate" step="0.1" min="0" max="100" placeholder="e.g. 75" required />
+        </div>
+        <div class="field">
+          <label for="study_hours">Study hours / day</label>
+          <span class="hint">Average hours</span>
+          <input type="number" id="study_hours" name="study_hours" step="0.1" min="0" max="24" placeholder="e.g. 3.5" required />
+        </div>
+        <div class="field">
+          <label for="assignment_delay">Assignment delay (days)</label>
+          <span class="hint">Avg days late</span>
+          <input type="number" id="assignment_delay" name="assignment_delay" step="1" min="0" placeholder="e.g. 2" required />
+        </div>
+        <div class="field">
+          <label for="stress_index">Stress index</label>
+          <span class="hint">Self-reported (0 – 10)</span>
+          <input type="number" id="stress_index" name="stress_index" step="0.1" min="0" max="10" placeholder="e.g. 6" required />
+        </div>
+        <div class="field">
+          <label for="travel_time">Travel time (min)</label>
+          <span class="hint">One-way commute</span>
+          <input type="number" id="travel_time" name="travel_time" step="1" min="0" placeholder="e.g. 30" required />
+        </div>
+      </div>
+    </div>
+
+    <!-- Socioeconomic -->
+    <div class="card">
+      <div class="card-title">Socioeconomic background</div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="family_income">Family income (₹ / year)</label>
+          <input type="number" id="family_income" name="family_income" step="100" min="0" placeholder="e.g. 35000" required />
+        </div>
+        <div class="field">
+          <label for="parental_education">Parental education</label>
+          <select id="parental_education" name="parental_education" required>
+            <option value="" disabled selected>Select level</option>
+            <option value="High School">High School</option>
+            <option value="Bachelor">Bachelor</option>
+            <option value="Master">Master</option>
+            <option value="PhD">PhD</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal -->
+    <div class="card">
+      <div class="card-title">Personal details</div>
+      <div class="grid-2" style="row-gap: 1.5rem;">
+
+        <div class="field">
+          <label>Gender</label>
+          <div class="chip-group" style="margin-top:4px">
+            <input type="radio" id="gender_m" name="gender" value="Male" required />
+            <label for="gender_m">Male</label>
+            <input type="radio" id="gender_f" name="gender" value="Female" />
+            <label for="gender_f">Female</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Internet access</label>
+          <div class="chip-group" style="margin-top:4px">
+            <input type="radio" id="inet_y" name="internet_access" value="Yes" required />
+            <label for="inet_y">Yes</label>
+            <input type="radio" id="inet_n" name="internet_access" value="No" />
+            <label for="inet_n">No</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Part-time job</label>
+          <div class="chip-group" style="margin-top:4px">
+            <input type="radio" id="job_y" name="part_time_job" value="Yes" required />
+            <label for="job_y">Yes</label>
+            <input type="radio" id="job_n" name="part_time_job" value="No" />
+            <label for="job_n">No</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Scholarship</label>
+          <div class="chip-group" style="margin-top:4px">
+            <input type="radio" id="sch_y" name="scholarship" value="Yes" required />
+            <label for="sch_y">Yes</label>
+            <input type="radio" id="sch_n" name="scholarship" value="No" />
+            <label for="sch_n">No</label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">Predict dropout risk →</button>
+  </form>
+
+  <div id="errorMsg" class="error-msg"></div>
+
+  <div id="result">
+    <div class="result-card" id="resultCard">
+      <div class="result-label" id="resultLabel"></div>
+      <div class="result-prob" id="resultProb"></div>
+      <div class="prob-bar-wrap">
+        <div class="prob-bar-fill" id="probBar" style="width:0%"></div>
+      </div>
+      <div class="prob-labels"><span>0% risk</span><span>100% risk</span></div>
+      <div class="result-note">
+        This prediction is based on a Logistic Regression model optimised for recall — it
+        prioritises catching at-risk students even at the cost of some false alarms. Always
+        pair predictions with human judgement.
+      </div>
+    </div>
+  </div>
+
+  <footer>Model: Logistic Regression · Recall 77.1% · Trained on 10,000 students</footer>
+
+</div>
+
+<script>
+  document.getElementById("predictForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById("submitBtn");
+    const errEl = document.getElementById("errorMsg");
+    const resultEl = document.getElementById("result");
+
+    btn.disabled = true;
+    btn.textContent = "Predicting…";
+    errEl.style.display = "none";
+    resultEl.style.display = "none";
+
+    try {
+      const formData = new FormData(this);
+      const res  = await fetch("/predict", { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error);
+
+      const card  = document.getElementById("resultCard");
+      const label = document.getElementById("resultLabel");
+      const prob  = document.getElementById("resultProb");
+      const bar   = document.getElementById("probBar");
+
+      const isRisk = data.prediction === 1;
+      card.className = "result-card " + (isRisk ? "risk" : "safe");
+      label.textContent = data.label;
+      prob.textContent  = `Dropout probability: ${data.probability}%`;
+
+      bar.style.width = "0%";
+      resultEl.style.display = "block";
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { bar.style.width = data.probability + "%"; });
+      });
+
+    } catch (err) {
+      errEl.textContent = "Error: " + err.message;
+      errEl.style.display = "block";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Predict dropout risk →";
+    }
+  });
+</script>
+</body>
+</html>
