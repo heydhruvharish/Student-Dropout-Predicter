@@ -142,9 +142,6 @@ def predict():
 
 
 # ── Start ─────────────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    train_model()
-    app.run(debug=True)
 
 if __name__ == "__main__":
     train_model()
