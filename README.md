@@ -1,37 +1,51 @@
-# Student-Dropout-Predictor
-An ML-based analytics solution to identify students at risk of dropping out. It analyzes academic  and socioeconomic factors to enable early institutional intervention.
-
 # 🎓 Student Dropout Predictor
 
 An end-to-end Machine Learning project that predicts whether a student is at risk of dropping out based on academic, socioeconomic, and behavioral factors.
 
+## 🔗 Quick Links
+
+🚀 **Live Demo**
+https://YOUR_RENDER_LINK.onrender.com
+
+📊 **Project Report**
+https://heydhruvharish.github.io/Student-Dropout-Predictor/project_report.html
+
+📓 **Jupyter Notebook**
+`notebook/main.ipynb`
+
 ---
 
-## 🚀 Live Demo
+## 📖 Project Overview
 
-🔗 **Web Application:**
-<https://student-dropout-predictor-iwxs.onrender.com>
-
-Interact with the model by providing student details and receive an instant prediction.
+This project aims to identify students who are at risk of dropping out using Machine Learning techniques. The application allows users to input student information and obtain predictions through an interactive web interface.
 
 ---
 
 ## 📊 Project Report
 
-🔗 **Complete Case Study:**
-[project_report.html](https://heydhruvharish.github.io/Student-Dropout-Predictor/project_report.html)
+The project report provides an overview of the work carried out in the Jupyter notebook, including:
 
-The report contains:
-
-The overview of the contents in ipynb file
+* Exploratory Data Analysis (EDA)
+* Data Cleaning and Preprocessing
+* Handling Missing Values
+* Feature Engineering
+* Encoding and Feature Scaling
+* Model Selection and Training
+* Hyperparameter Tuning
+* Model Evaluation and Performance Metrics
+* Key Findings and Conclusions
 
 ---
 
-## 📓 Jupyter Notebook
+## 🚀 Features
 
-View the complete notebook:
-
-`notebook/main.ipynb`
+* Interactive Web Application
+* Data Preprocessing Pipeline
+* Logistic Regression Model
+* Hyperparameter Tuning
+* Real-Time Predictions
+* Comprehensive Project Report
+* Jupyter Notebook for Reproducibility
 
 ---
 
@@ -48,7 +62,27 @@ View the complete notebook:
 
 ---
 
-## 📈 Model Details
+## 📂 Repository Structure
+
+```text
+Student-Dropout-Predictor
+│
+├── notebook/
+│     └── main.ipynb
+│
+├── templates/
+│     └── index.html
+│
+├── app.py
+├── project_report.html
+├── requirements.txt
+├── student_dropout_dataset_v3.csv
+└── README.md
+```
+
+---
+
+## 🧠 Model Information
 
 **Algorithm:** Logistic Regression
 
@@ -60,41 +94,11 @@ Parameters:
 * `C = 0.01`
 * `max_iter = 100`
 
-The model was optimized with a focus on improving recall for dropout detection.
+The model was optimized with a focus on improving recall for identifying students at risk of dropping out.
 
 ---
 
-## Features
+## 👨‍💻 Author
 
-✅ Data Cleaning and Preprocessing
-✅ Feature Encoding and Scaling
-✅ Logistic Regression Model
-✅ Interactive Web Interface
-✅ Detailed Project Report
-✅ Public Deployment with Render
-
----
-
-## Repository Structure
-
-```
-Student-Dropout-Predictor
-│
-├── app.py
-├── requirements.txt
-├── student_dropout_dataset_v3.csv
-├── project_report.html
-├── notebook/
-│     └── main.ipynb
-├── templates/
-│     └── index.html
-└── README.md
-```
-
----
-
-## Author
-
-Dhruv Harish
-
+**Dhruv Harish**
 First-Year Computer Science Student | Machine Learning Enthusiast
