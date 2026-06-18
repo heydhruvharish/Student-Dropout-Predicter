@@ -19,7 +19,7 @@ Interact with the model by providing student details and receive an instant pred
 ## 📊 Project Report
 
 🔗 **Complete Case Study:**
-[project_report.html]([./project_report.html](https://heydhruvharish.github.io/Student-Dropout-Predictor/project_report.html))
+[project_report.html](https://heydhruvharish.github.io/Student-Dropout-Predictor/project_report.html)
 
 The report contains:
 
