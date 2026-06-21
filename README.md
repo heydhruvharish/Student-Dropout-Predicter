@@ -99,4 +99,4 @@ The model was optimized with a focus on improving recall for identifying student
 ## 👨‍💻 Author
 
 **Dhruv Harish**
-First-Year Computer Science Student | Machine Learning Enthusiast
+Third-Year Computer Engineering Student | Machine Learning Enthusiast
